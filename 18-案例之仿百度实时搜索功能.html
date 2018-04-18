@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>vue-test</title>
+  </head>
+  <style>
+        body{
+            padding: 50px;
+        }
+        .fade-enter-active, .fade-leave-active{
+            transition: opacity .5s;
+        }
+        .fade-enter,.fade-leave-to{
+            opacity: 0;
+        }
+        .active{background: #666}
+  </style>
+  <link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/css/bootstrap.css" rel="stylesheet">
+  <body>
+   <!--仿百度实现实时搜索-->
+  <div class="container">
+    <div class="form-group">
+      <input type="text" class="form-control" id="search" placeholder="输入搜过关键词" v-model="keywords" @keyup="search($event)" @keydown.down="down" @keyup.up.prevent="up"/>
+    </div>
+    <ul>
+      <li v-for="(item,index) in searchList" :class="{active: index == now}" @click="searchLink(index)">{{item}}</li>
+    </ul>
+  </div>
+ <script type="text/javascript" src="static/js/vue.js"></script>
+ <script type="text/javascript" src="static/js/vue-resource.js"></script>
+  <script> 
+    //    仿百度实时搜索功能
+    new Vue({
+      el:'.container',
+      data:{
+        keywords:'',
+        searchList:[],
+        now:-1
+      },
+      methods:{
+        search:function(e){
+          if(e.keyCode==13){
+             window.open('https://wwww.baidu.com/s?wd=' + this.keywords);
+             this.keywords='';
+          }  
+          this.$http.jsonp('http://suggestion.baidu.com/su',{
+                params:{ 'wd': this.keywords },
+                jsonp:'cb'
+            }
+          ).then(function(res){
+                this.searchList=res.data.s;
+          },function(){
+
+          })
+        },
+        down:function(){
+            this.now++;
+            if(this.now==this.searchList.length) this.now=0;
+            this.keywords=this.searchList[this.now];
+        },
+        up:function(){
+            this.now--;
+            if(this.now==-1) this.now=this.searchList.length-1;
+            this.keywords=this.searchList[this.now];
+        },
+        searchLink: function(index) {//鼠标点击跳转
+            this.keywords = this.searchList[index]
+            this.now = index;
+            window.open('https://www.baidu.com/s?wd=' + this.keywords);
+            this.keywords = '';
+        }
+      }
+    })
+  </script>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

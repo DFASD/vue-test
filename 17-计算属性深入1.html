@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>vue-test</title>
+  </head>
+  <style>
+        body{
+            padding: 50px;
+        }
+        .fade-enter-active, .fade-leave-active{
+            transition: opacity .5s;
+        }
+        .fade-enter,.fade-leave-to{
+            opacity: 0;
+        }
+  </style>
+  <link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/css/bootstrap.css" rel="stylesheet">
+  <body>
+     <!--计算属性-->
+  <div class="computed">
+    <p>a=>{{a}}</p>
+    <p>b=>{{b}}</p>
+  </div>
+
+  <!--vue实例简单方法:-->
+  <!--vm.$el    ->  就是元素-->
+  <!--vm.$data  ->  就是data-->
+  <!--vm.$mount ->  手动挂在vue程序-->
+
+  <!--vm.$options   ->   获取自定义属性-->
+  <!--vm.$destroy   ->   销毁对象-->
+
+  <!--vm.$log();    ->  查看现在数据的状态-->
+ <script type="text/javascript" src="static/js/vue.js"></script>
+  <script> 
+    var vvm=new Vue({
+      el:'.computed',
+      data:{
+        a:1
+        },
+         computed:{
+            // b:function(){
+            //  return this.a+1;
+            // }
+            b:{
+              get:function(){
+                return this.a+1;
+              },
+              set:function(val){
+                return this.a=val;
+              }
+            }
+        }
+    })
+    document.onclick=function(){
+        //vvm.a=101;
+        vvm.b=105;
+    }
+  </script>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

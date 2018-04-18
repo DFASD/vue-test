@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>vue-test</title>
+  </head>
+  <style>
+
+  </style>
+  <link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/css/bootstrap.css" rel="stylesheet">
+  <body>
+  <!--条件渲染-->
+  <div id="condition" v-on:click="toggleTab">
+    <div v-if="type === 'A'">
+      A
+    </div>
+    <div v-else-if="type === 'B'">
+      B
+    </div>
+    <div v-else-if="type === 'C'">
+      C
+    </div>
+    <div v-else>
+      Not A/B/C
+    </div>
+    <h1 v-show="ok" class="show">Hello!</h1>
+  </div>
+   
+ <script type="text/javascript" src="static/js/vue.js"></script>
+  <script> 
+      var vm=new Vue({
+          el:'#condition',
+          data:{
+            type:'A',
+            ok:true
+          },
+          methods:{
+            toggleTab:function(){
+                this.type='B';
+            }
+          }
+
+      })
+
+  </script>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>vue-test</title>
+  </head>
+  <style>
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity .5s
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */ {
+      opacity: 0
+    }
+    [v-cloak] {
+      display: none;
+    }
+  </style>
+  <link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/css/bootstrap.css" rel="stylesheet">
+  <link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+  <body>
+   <!--循环遍历-->
+  <div id="app">
+    <ul>
+      <li v-for="todo in todoList">
+        {{todo.text}}
+      </li>
+    </ul>
+  </div>
+  
+ <script type="text/javascript" src="static/js/vue.js"></script>
+  <script type="text/javascript" src="static/js/vue-resource.js"></script>
+  <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+  <script>
+      var vm=new Vue({
+        el:'#app',
+        data:{
+          todoList:[
+            {text:'javascript'},
+            {text:'vue'},
+            {text:'node'}
+          ]
+        }
+      })
+  </script>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

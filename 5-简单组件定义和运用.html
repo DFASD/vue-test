@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>vue-test</title>
+  </head>
+  <style>
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity .5s
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */ {
+      opacity: 0
+    }
+    [v-cloak] {
+      display: none;
+    }
+  </style>
+  <link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/css/bootstrap.css" rel="stylesheet">
+  <link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+  <body>
+
+   <!--组件的注册-->
+  <ul id="example">
+    <todo-item></todo-item>
+  </ul>
+    <!-- 组件间的数据传递 -->
+  <ul id="example2">
+    <todo-item  v-for="item in itemList" :todo="item" :key="item.id"></todo-item>
+  </ul>
+ <script type="text/javascript" src="static/js/vue.js"></script>
+  <script type="text/javascript" src="static/js/vue-resource.js"></script>
+  <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+  <script>
+      Vue.component('todo-item',{
+        template:'<h3>我是全局注册的组件</h3>',
+        props:['todo']
+      })      
+      var vm=new Vue({
+          el:'#example',
+      })
+      Vue.component('todo-item',{
+        props:['todo'],
+        template:'<p>{{todo.text}}</p>'
+        
+      })      
+      new Vue({
+          el:'#example2',
+          data:{
+            itemList:[
+                {id:0,text:'羽毛球'},
+                {id:1,text:'乒乓球'},
+                {id:2,text:'篮球'}
+            ]
+          }
+      })
+
+  </script>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

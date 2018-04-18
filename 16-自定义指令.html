@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>vue-test</title>
+  </head>
+  <style>
+        body{
+            padding: 50px;
+        }
+        .fade-enter-active, .fade-leave-active{
+            transition: opacity .5s;
+        }
+        .fade-enter,.fade-leave-to{
+            opacity: 0;
+        }
+  </style>
+  <link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/css/bootstrap.css" rel="stylesheet">
+  <body>
+     <!--自定义指令-->
+  <div id="directive">
+    <p v-red v-cloak>{{msg}}</p>
+    <span v-color="color">带有参数自定义指令</span><br>
+    <input type="text" v-focus v-val>
+  </div>
+ <script type="text/javascript" src="static/js/vue.js"></script>
+  <script> 
+    // 全局自定义指令
+    Vue.directive('red',{
+        inserted:function(el){
+            el.style.color='#f00';
+        }
+    })
+    Vue.directive('color',{
+        inserted:function(el,binding){
+            // console.log(binding);
+            el.style.color=binding.value;
+        }
+    })
+    Vue.directive('focus',{
+        inserted:function(el){
+            el.focus();
+        }
+    })
+    new Vue({
+        el:'#directive',
+        data:{
+            msg:'哈哈哈 我是自定义指令的内容',
+            color:'#00f',
+        },
+        directives:{
+            val:{
+                inserted:function(el){
+                    el.value="局部自定义指令";
+                }
+            }
+        }
+    })
+
+  </script>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>vue-test</title>
+  </head>
+  <style>
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity .5s
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */ {
+      opacity: 0
+    }
+    [v-cloak] {
+      display: none;
+    }
+  </style>
+  <link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/css/bootstrap.css" rel="stylesheet">
+  <link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+  <body>
+  <!--绑定数据-->
+  <div id="app1">{{message}}</div>
+  <!--数据状态的更新-->
+  <div id="app2">
+    <span :title="message">鼠标悬停</span>
+  </div>
+  <!--条件判断-->
+  <div id="app3">
+    <p v-if="seen">See Me</p>
+  </div>
+<!--循环遍历-->
+  <div id="app4">
+    <ul>
+      <li v-for="todo in todolsit">
+        {{todo.text}}
+      </li>
+    </ul>
+  </div>
+<!--事件绑定-->
+  <div id="app5">
+    <p>{{message}}</p>
+    <button v-on:click="reverseMessage">逆转信息</button>
+  </div>
+<!--双向数据绑定-->
+  <div id="app6">
+    <p>{{message}}</p>
+    <input type="text" v-model="message">
+  </div>
+
+  <!--组件的应用-->
+
+  <!--组件的注册-->
+  <ul id="example">
+    <todo-item></todo-item>
+  </ul>
+
+  <div id="app7">
+    <ul>
+      <todo-item v-for="item in itemlist" v-bind:todo="item" v-bind:key="item.id"></todo-item>
+    </ul>
+  </div>
+
+  <!--模板语法-->
+  <div v-html="rawHtml">1111</div>
+
+  <button v-on:click="submit" id="submit">提交</button>
+
+  <!--过滤器-->
+  <!--<div class="test" v-bind:id="rawId | formatId">{{message | capitalize }}</div>-->
+
+  <!--计算属性-->
+  <div id="demo">{{ message }}</div>
+
+  <!--class与style的绑定-->
+  <!--对象语法-->
+  <div id="bindClass" v-bind:class="{active:isActive,text: hasError }">bindClass</div>
+  <div id="classObject" v-bind:class="classObject">classObject</div>
+  <!--数组语法-->
+  <!--<div id="classArray" v-bind:class="[activeClass,errorClass]">classArray</div>-->
+  <div id="classArray" v-bind:class="[{isActive:activeClass},errorClass]">classArray</div>
+
+  <!--绑定内联样式-->
+  <div v-bind:style="{ color: activeColor, fontSize: fontSize + 'px' }" id="style">绑定内联样式</div>
+  <div v-bind:style="styleObject" id="style2">绑定内联样式2</div>
+
+  <!--条件渲染-->
+  <div id="tab" v-on:click="toggleTab">
+    <div v-if="type === 'A'">
+      A
+    </div>
+    <div v-else-if="type === 'B'">
+      B
+    </div>
+    <div v-else-if="type === 'C'">
+      C
+    </div>
+    <div v-else>
+      Not A/B/C
+    </div>
+  </div>
+
+  <h1 v-show="ok" class="show">Hello!</h1>
+
+  <!--列表渲染-->
+  <ul id="example-for">
+    <!--<li  v-for="(item,index) in items">{{index}}-{{item.message}}</li>-->
+    <li class="divider">全部</li>
+    <template v-for="item in items">
+      <li>{{ item.message }}</li>
+    </template>
+  </ul>
+    <!--对象迭代-->
+  <ul id="repeat-object" class="demo">
+    <li v-for="(value,key) in object">
+      {{key}}：{{ value }}
+    </li>
+  </ul>
+
+  <!--组件和v-for-->
+  <!--<my-component v-for="item in items" :key="item.id"></my-component>-->
+  <!--<my-component-->
+          <!--v-for="(item, index) in items"-->
+          <!--v-bind:item="item"-->
+          <!--v-bind:index="index"-->
+          <!--v-bind:key="item.id">-->
+  <!--</my-component>-->
+
+  <div id="todo-list">
+    <input type="text" v-model="newTodoText" v-on:keyup.enter="addNewTodo" placeholder="Add a todo">
+    <ul>
+      <li is="todo-item" v-for="(todo,index) in todos" v-bind:key="index" v-bind:title="todo" v-on:remove="todos.splice(index,1)"></li>
+    </ul>
+  </div>
+  <!--数组方法-->
+  <ul id="array">
+    <li v-for="n in evenNumbers">{{ n }}</li>
+  </ul>
+
+  <!--方法事件处理器-->
+  <div id="example-2">
+    <!-- `greet` 是在下面定义的方法名 -->
+    <button v-on:click.once="greet('Hello Vue')">Greet</button>
+  </div>
+
+  <!-- Ctrl + Click -->
+  <div @click.ctrl="doSomething" class="dosomething">Do something</div>
+  <div id="select">
+    <select name="" v-model="selected">
+      <option v-for="option in options" v-bind:value="option.value" v-text="option.text"></option>
+    </select>
+    <span>Selected: {{ selected }}</span>
+  </div>
+
+  <input v-model.trim="msg" class="trim"><!--失去焦点时触发-->
+
+  <!--过渡动画-->
+  <div id="transition">
+    <button @click="show=!show">Toggle</button>
+    <transition name="fade">
+      <p v-if="show">Hello</p>
+    </transition>
+  </div>
+
+  <!--自定义指令-->
+  <div id="directive">
+    <p v-red v-cloak>{{msg}}</p>
+    <span v-color="color">我是p</span><br>
+    <input type="text" v-focus>
+  </div>
+
+  <!--自定义指令案例-->
+  <div id="box">
+    <div v-drag :style="{width:'100px',height:'100px',background:'#f00',position:'absolute',top:'60%',right:'0'}"></div>
+    <div v-drag :style="{width:'100px',height:'100px',background:'#00f',position:'absolute',top:'80%',right:'0'}"></div>
+  </div>
+
+  <!--计算属性-->
+  <div class="computed">
+    <p>a=>{{a}}</p>
+    <p>b=>{{b}}</p>
+  </div>
+
+  <!--vue实例简单方法:-->
+  <!--vm.$el	->  就是元素-->
+  <!--vm.$data  ->  就是data-->
+  <!--vm.$mount ->  手动挂在vue程序-->
+
+  <!--vm.$options	->   获取自定义属性-->
+  <!--vm.$destroy	->   销毁对象-->
+
+  <!--vm.$log();	->  查看现在数据的状态-->
+
+  <div class="vue">
+    <p>{{msg}}</p>
+  </div>
+
+  <!--仿百度实现实时搜索-->
+  <div class="container">
+    <div class="form-group">
+      <input type="text" class="form-control" id="search" placeholder="输入搜过关键词" v-model="keywords" @keyup="search">
+    </div>
+    <ul>
+      <li v-for="item in searchList">{{item}}</li>
+    </ul>
+  </div>
+
+  <!--复杂动画-->
+  <div id="animate" style="width: 400px;margin:0 auto">
+    <button @click="toggle">Toggle</button>
+    <!--单元素运动-->
+    <transition enter-active-class="zoomInLeft" leave-active-class="zoomOutRight">
+      <!--<div style="width: 100px;height:100px;background:#f00" v-show="show" class="animated"></div>-->
+    </transition>
+    <!--多元素运动-->
+    <transition-group enter-active-class="zoomInLeft" leave-active-class="zoomOutRight">
+      <div style="width: 100px;height:100px;background:#f00" v-show="show" class="animated" :key="1"></div>
+      <div style="width: 100px;height:100px;background:#00f" v-show="show" class="animated" :key="2"></div>
+    </transition-group>
+  </div>
+
+  <!--vue的组件-->
+  <div id="component">
+    <test msg="Hello Component"></test>
+    <global></global>
+  </div>
+
+  <!--vue模板-->
+  <div id="template">
+    <h3>我是全局注册的组件调用的模板</h3>
+    <comp1></comp1>
+    <h3>我是局部注册的组件调用的模板</h3>
+    <comp2 :child-msg="msg">
+      <div slot="div-slot1">11111</div>
+      <div slot="div-slot2">22222</div>
+    </comp2>
+  </div>
+
+  <script type='text/x-template' id="templ1">
+    <ul>
+      <li v-for="item in list">{{item}}</li>
+    </ul>
+  </script>
+  <template id="templ2">
+    <ul>
+      <div>{{childMsg}}</div>
+      <aaa :my-msg="list"></aaa>
+      <li v-for="item in list">{{item}}</li>
+      <slot name="div-slot1">这是默认的情况1</slot>
+      <slot name="div-slot2">这是默认的情况2</slot>
+    </ul>
+  </template>
+
+  <!--父子组件间的数据更改-->
+  <div id="con">
+      <div>父级->{{msg}}</div>
+      <child-com :my-msg="msg"></child-com>
+  </div>
+  <template id="child-templ">
+    <div>
+      <!--<div>{{myMsg.a}}</div>-->
+      <div>子级->{{b}}</div>
+      <button @click="change">按钮</button>
+    </div>
+
+  </template>
+
+  <!--单一组件通信-->
+  <div id="emit">
+      <com-a></com-a>
+      <com-b></com-b>
+      <com-c></com-c>
+  </div>
+
+  <!--路由-->
+  <div id="router">
+    <button @click="push">添加路由</button>
+    <button @click="replace">替换路由</button>
+    <div>
+      <router-link to="/home">主页</router-link>
+      <router-link to="/news">新闻</router-link>
+      <div>
+        <transition enter-active-class="animated bounceInLeft" leave-active-class="animated bounceOutRight" >
+          <router-view></router-view>
+        </transition>
+
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="static/js/vue.js"></script>
+  <script type="text/javascript" src="static/js/vue-resource.js"></script>
+  <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+  <script>
+    var app=new Vue({
+      el:'#app1',
+      data:{
+        message:'Hello Vue'
+      }
+    })
+
+    var app2=new Vue({
+      el:'#app2',
+      data:{
+        message:'Hello Vue'+new Date()
+      }
+    })
+
+    var app3=new Vue({
+      el:'#app3',
+      data:{
+        seen:/*false*/true
+      }
+    })
+
+    var app4=new Vue({
+      el:'#app4',
+      data:{
+        todolsit:[
+          {text:'学习JavaScript'},
+          {text:'学习Vue'},
+          {text:'学习NodeJs'}
+        ]
+      }
+    })
+
+    var app5=new Vue({
+      el:'#app5',
+      data:{
+        message:'Hello vue.js'
+      },
+      methods:{
+        reverseMessage:function(){
+          this.message=this.message.split('').reverse().join('');
+        }
+      }
+    })
+
+    var app6=new Vue({
+      el:'#app6',
+      data:{
+        message:'Hello vue.js'
+      }
+    })
+
+
+    Vue.component('todo-item',{
+      template:'<li>这是个待办项</li>'
+    })
+
+    new Vue({
+      el: '#example',
+      // 选项
+    })
+
+    Vue.component('todo-item',{
+      props:['todo'],
+      template:'<li>{{todo.text}}</li>'
+    })
+
+    var app7=new Vue({
+      el:"#app7",
+      data:{
+        itemlist:[
+          {id:0,text:'羽毛球'},
+          {id:1,text:'乒乓球'},
+          {id:2,text:'篮球'}
+        ]
+      }
+    })
+
+    var data = { a: 1 };
+    var vm = new Vue({
+      el: '#example',
+      data: data
+    });
+    vm.$data === data; // -> true
+    vm.$el === document.getElementById('example'); // -> true
+    // $watch 是一个实例方法
+    vm.$watch('a', function (newVal, oldVal) {
+      // 这个回调将在 `vm.a`  改变后调用
+      console.log(newVal,oldVal);
+    })
+
+    new Vue({
+      el: '#submit',
+      data: {
+        submitInfo:'111'
+       },
+      methods:{
+        submit:function(){
+          console.log(this.submitInfo);
+        }
+      }
+    });
+
+    new Vue({
+      el: '#demo',
+      data: {
+        message:Date.now()
+      },
+//      computed: {
+//        now: function () {
+//          return Date.now()
+//        }
+//      },
+      watch: {
+        now: function () {
+          return Date.now()
+        }
+      }
+    })
+
+    new Vue({
+      el:'#bindClass',
+      data:{
+        isActive:true,
+        hasError:true
+      }
+    })
+
+    new Vue({
+      el: '#classObject',
+      data:{
+        classObject: {
+          isActive:true,
+          hasError:false
+        }
+      }
+    })
+
+    new Vue({
+      el: '#classArray',
+      data:{
+        activeClass:'active',
+        isActive:true,
+        errorClass:'error'
+      }
+    })
+
+    new Vue({
+      el:'#style',
+      data:{
+        activeColor:'red',
+        fontSize:24,
+      }
+    })
+
+    new Vue({
+      el:'#style2',
+      data:{
+        styleObject:{
+          color:'green',
+          fontSize:'30px'
+        }
+      }
+    })
+
+    new Vue({
+      el:'#tab',
+      data:{
+       type:'A'
+      },
+      methods:{
+        toggleTab:function(){
+          alert(this.type='B')
+        }
+      }
+    })
+
+    new Vue({
+      el:'.show',
+      data:{
+        ok:true
+      }
+    })
+
+    new Vue({
+      el:'#example-for',
+      data:{
+        items:[
+          {message:'foo'},
+          {message:'bar'}
+        ]
+      }
+    })
+    new Vue({
+      el: '#repeat-object',
+      data: {
+        object: {
+          firstName: 'John',
+          lastName: 'Doe',
+          age: 30
+        }
+      }
+    })
+
+    Vue.component('todo-item',{
+      template:'\
+        <li>\
+          {{ title }}\
+          <button v-on:click="$emit(\'remove\')">X</button>\
+        </li>\
+      ',
+      props:['title']
+    })
+
+    new Vue({
+      el:'#todo-list',
+      data:{
+        newTodoText:'',
+        todos:[
+          'Do the dishes',
+          'Take out the trash',
+          'Mow the lawn'
+        ]
+      },
+      methods:{
+        addNewTodo:function(){
+          this.todos.push(this.newTodoText);
+          this.newTodoText='';
+        }
+      }
+    })
+
+    new Vue({
+      el:'#array',
+      data:{
+        numbers: [ 1, 2, 3, 4, 5 ]
+      },
+      computed:{
+        evenNumbers:function(){
+          return this.numbers.filter(function(num){
+            return num%2==0;
+          })
+        }
+      }
+    })
+    var example2=new Vue({
+      el:'#example-2',
+      data:{
+        name:'vue.js'
+      },
+      methods:{
+        greet:function(msg){
+          alert(msg)
+        }
+      }
+    })
+
+    new Vue({
+      el:'.dosomething',
+      methods:{
+        doSomething:function(){
+          alert('ctrl被按下了')
+        }
+      }
+    })
+
+    new Vue({
+      el: '#select',
+      data: {
+        selected: 'A',
+        options: [
+          { text: 'One', value: 'A' },
+          { text: 'Two', value: 'B' },
+          { text: 'Three', value: 'C' }
+        ]
+      }
+    })
+
+    new Vue({
+      el: '.trim',
+      data: {
+        msg: ' Hello World',
+      }
+    })
+    new Vue({
+      el:'#transition',
+      data:{
+        show:true
+      }
+    })
+//    注册全局指令 **全局指令必须放在vue实例化的前面，不然指令会报错
+    Vue.directive('red', {
+      inserted: function (el) {
+        el.style.color='red';
+      }
+    })
+
+    Vue.directive('color', {
+      inserted: function (el,binding) {
+        console.log(binding);
+        el.style.color=binding.value;
+      }
+    })
+
+    new Vue({
+      el:'#directive',
+      data:{
+        msg:'abc',
+        color:'blue'
+      },
+//      注册局部指令
+      directives:{
+        focus:{
+          inserted:function(el){
+            el.focus();
+          }
+        }
+      }
+    })
+
+    Vue.directive('drag',{
+      inserted:function(el){
+        el.onmousedown=function(e){
+          var disx=e.clientX-el.offsetLeft;
+          var disy=e.clientY-el.offsetTop;
+          document.onmousemove=function(e){
+            var l=e.clientX-disx;
+            var t=e.clientY-disy;
+            el.style.left=l+'px';
+            el.style.top=t+'px';
+          };
+          document.onmouseup=function(e){
+            document.onmousemove=null;
+            document.onmouseup=null;
+          }
+        }
+      }
+    })
+    new Vue({
+      el:'#box',
+      data:'',
+    })
+
+    var vvm=new Vue({
+      el:'.computed',
+      data:{
+        a:1
+      },
+      computed:{
+//        b:function(){
+//          return this.a+1;
+//        }
+        b:{
+          get:function(){
+            return this.a+1;
+          },
+          set:function(val){
+            return this.a=val;
+          }
+        }
+      }
+    })
+    document.onclick=function(){
+//      vvm.a=101;
+        vvm.b=105;
+    }
+    console.log(vvm);
+
+//    手动挂载vue
+    var vue=new Vue({
+      aa:11,
+      data:{
+        msg:'Hello Vue'
+      }
+    }).$mount('.vue');
+    console.log(vue.$options.aa);//11
+
+//    仿百度实时搜索功能
+    new Vue({
+      el:'.container',
+      data:{
+        keywords:'',
+        searchList:[]
+      },
+      methods:{
+        search:function(){
+          this.$http.jsonp('https://www.baidu.com/s',{params :{wd:this.keywords}},{
+            jsonp: 'cb'
+          }).then(function(){
+
+          },function(){
+
+          })
+        }
+      }
+    })
+
+    new Vue({
+      el:'#animate',
+      data:{
+         show:true
+      },
+      methods:{
+        toggle(){
+           this.show=!this.show;
+        },
+      }
+    })
+
+//    全局组件
+    Vue.component('test',{
+      props:['msg'],
+      template:'<h3>{{msg}}</h3>'
+    })
+
+//    局部注册
+    var child={
+      template:'<h3>A global component!</h3>',
+    }
+    new Vue({
+      el:'#component',
+      data:{
+          msg:'我是自定义组件'
+      },
+      components:{
+        global:child
+      }
+    })
+
+    Vue.component('comp1',{
+      template:'#templ1',
+      data: function () {
+        return {list:['apple','banner','orangle']}
+      }
+    })
+    new Vue({
+      el:'#template',
+      data:{
+         msg:'我是父组件的数据'
+      },
+      components:{
+        comp2:{
+          props:['childMsg'],
+          template:'#templ2',
+          data: function () {
+            return {list:['apple2','banner2','orangle2']};
+          },
+          components:{
+            aaa:{
+                props:['myMsg'],
+                template:'<h6>我是com2的子组件aaa{{myMsg}}</h6>',
+            }
+
+          }
+        }
+      }
+    })
+
+    new Vue({
+      el:'#con',
+      data:{
+        msg:'我是父组件的数据',
+//        giveData:{
+//          a:'123'
+//        }
+      },
+      components:{
+        'child-com':{
+          props:['myMsg'],
+          template:'#child-templ',
+          data(){
+            return {b:''}
+          },
+          mounted(){
+            this.b=this.myMsg;
+          },
+          methods:{
+            change(){
+//              this.myMsg.a='222'
+              this.b='被更改了';
+            }
+          }
+        }
+      }
+    })
+
+    var Event=new Vue();
+    var A={
+      template:`
+          <div>
+              <span>我是a组件</span>-->{{a}}
+              <button @click="send">把A数据给C</button>
+          </div>
+          `
+      ,
+      data(){
+        return {a:'我是a数据'}
+      },
+      methods:{
+        send(){
+            Event.$emit('a-msg',this.a);
+        }
+      }
+
+    }
+    var B={
+      template:`
+        <div>
+            <span>我是b组件</span>-->{{b}}
+             <button @click="send">把B数据给C</button>
+        </div>
+      `
+      ,
+      data(){
+        return {b:'我是b数据'}
+      }
+      ,
+      methods:{
+        send(){
+          Event.$emit('b-msg',this.b);
+        }
+      }
+    }
+    var C={
+      template:
+          `<div>
+               <h3>我是c组件</h3>
+               <span>接收过来的A组件的数据为：{{a}}</span>
+               <br>
+               <span>接收过来的B组件的数据为：{{b}}</span>
+          </div>`,
+      data(){
+        return {
+          a:'',
+          b:''
+        }
+      },
+      mounted(){
+//        接收A组件传递的数据
+//        var _this=this;
+        Event.$on('a-msg',function(a){
+          this.a=a;
+        }.bind(this))
+//        接收B组件传递过来的数据
+        Event.$on('b-msg',function(b){
+          this.b=b;
+        }.bind(this))
+      }
+    }
+    new Vue({
+      el:'#emit',
+      components:{
+        'com-a':A,
+        'com-b':B,
+        'com-c':C,
+      }
+    })
+//    定义组件
+    var Home={
+      template:
+          ` <div>
+              <h3>我是主页</h3>
+              <h3>我是主页</h3>
+              <h3>我是主页</h3>
+            </div>
+            `
+    }
+    var News={
+      template:`
+            <div>
+              <h3>我是新闻</h3>
+              <ul>
+                  <li><router-link to="/news/Monday/index/1">新闻列表01</router-link></li>
+                  <li><router-link to="/news/Tuesday/index/2">新闻列表02</router-link></li>
+                  <li><router-link to="/news/Wednesday /index/3">新闻列表03</router-link></li>
+              </ul>
+              <div><router-view></router-view></div>
+            </div>
+       `
+    }
+
+    var newsList={
+        template:'<div>{{$route.params}}</div>'
+    }
+//    配置路由
+    const routes=[
+      {path:'/home',component:Home},
+      {
+        path:'/news',
+        component:News,
+        children:[
+            {path:':news/index/:index',component:newsList}
+        ]
+      },
+      {path:'/',redirect:'/home'}
+    ]
+//    生成路由实例
+    const router=new VueRouter({
+      routes
+    })
+//    将路由挂载到vue上
+    new Vue({
+      el:'#router',
+      router,
+      methods:{
+        push:function(){
+//          添加路由
+          router.push({path:'/home'})
+        },
+        replace:function(){
+//          替换路由
+          router.push({path:'/news'})
+        }
+      }
+    })
+  </script>
+    <!-- built files will be auto injected -->
+  </body>
+</html>
